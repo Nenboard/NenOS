@@ -114,11 +114,7 @@ hardware_check:
     je check_disk_drive
     cmp bl, 1
     je check_coprocessor
-    cmp bl, 2
-    je check_disk_drives
 
-    mov si, enter
-    call print
     jmp return
 
 check_disk_drive:
@@ -137,36 +133,14 @@ check_coprocessor:
     mov si, coprocessor
     call print
     int 0x11
-    shr al, 6
     shl al, 1
+    shr al, 7
     inc bl
 
     cmp al, 0
     je no
     cmp al, 0
     jne yes
-
-check_disk_drives:
-    mov si, disk_drives
-    call print
-
-    int 0x11
-    shr ah, 7
-    add ah, "0"
-    mov al, ah
-    mov ah, 0x0e
-    int 0x10
-
-    int 0x11
-    shr ah, 6
-    shl ah, 1
-    add ah, "0"
-    mov al, ah
-    mov ah, 0x0e
-    int 0x10
-
-    inc bl
-    jmp hardware_check
 
 no:
     mov si, hardware_no
@@ -231,23 +205,23 @@ convert:
     mov ah, al
     shr ah, 4
     add ah, "0"
-    mov bl, ah
+    mov bh, ah
     
     mov al, dl
-    and al, 0Fh
+    shl al, 4
+    shr al, 4
     add al, "0"
-    mov bh, al
-
-    mov al, bl
-    mov ah, 0x0e
-    int 0x10
+    mov bl, al
 
     mov al, bh
     mov ah, 0x0e
     int 0x10
 
+    mov al, bl
+    mov ah, 0x0e
+    int 0x10
+
     mov al, 0
-    mov bl, 0
     ret
 
 return:
@@ -275,7 +249,6 @@ command_time: db "time"
 about: db "System:", 10, 13, "  1. Name: NenOS", 10, 13, "  2. Version: Alpha 1.0", 10, 13, "  3. Made by: Nenboard", 10, 13, 0
 disk_drive: db "Hardware:", 10, 13, "  1. Are the disk drives installed: ", 0
 coprocessor: db "  2. Are the coprocessor installed: ", 0
-disk_drives: db "  3. How many disk drives are installed: ", 0
 hardware_yes: db "YES", 0
 hardware_no: db "NO", 0
 help: db "Available Commands:", 10, 13, "  1. ABOUT - displaying information about the system.", 10, 13, "  2. CLS - clear the screen.", 10, 13,  "  3. HARDWARE - hardware display.", 10, 13, "  4. HELP - displaying available commands.", 10, 13, "  5. MEM - launches the memory app.", 10, 13, "  6. REBOOT - reboot the computer.", 10, 13, "  7. TIME - launches the watch app.", 10, 13, 0
