@@ -263,7 +263,7 @@ command_help: db "help"
 command_mem: db "mem"
 command_reboot: db "reboot"
 command_time: db "time"
-about: db "System:", 10, 13, "  1. Name: NenOS", 10, 13, "  2. Version: Alpha 1.1", 10, 13, "  3. Made by: Nenboard", 10, 13, 0
+about: db "System:", 10, 13, "  1. Name: NenOS", 10, 13, "  2. Version: Alpha 1.0", 10, 13, "  3. Made by: Nenboard", 10, 13, 0
 disk_drive: db "Hardware:", 10, 13, "  1. Are the disk drives installed: ", 0
 coprocessor: db "  2. Are the coprocessor installed: ", 0
 hardware_yes: db "YES", 0
