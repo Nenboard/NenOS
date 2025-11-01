@@ -166,6 +166,10 @@ mem:
     lodsb
     mov ah, 0x0e
     int 0x10
+    mov ah, 0x01
+    int 0x16
+    cmp al, 0
+    jne exit
     jmp mem
 
 reboot:
@@ -173,8 +177,7 @@ reboot:
 
 time:
     mov ah, 0x01
-    mov ch, 0x20
-    mov cl, 0x00
+    mov cx, 0x2000
     int 0x10
 
     mov al, 13
@@ -198,6 +201,10 @@ time:
 
     mov dl, dh
     call convert
+    mov ah, 0x01
+    int 0x16
+    cmp al, 0
+    jne exit
     jmp time
 
 convert:
@@ -224,6 +231,16 @@ convert:
     mov al, 0
     ret
 
+exit:
+    mov ah, 0x00
+    int 0x16
+    mov ah, 0x01
+    mov cx, 0x0607
+    int 0x10
+    mov si, enter
+    call print
+    jmp return
+
 return:
     mov si, console
     call print
@@ -246,7 +263,7 @@ command_help: db "help"
 command_mem: db "mem"
 command_reboot: db "reboot"
 command_time: db "time"
-about: db "System:", 10, 13, "  1. Name: NenOS", 10, 13, "  2. Version: Alpha 1.0", 10, 13, "  3. Made by: Nenboard", 10, 13, 0
+about: db "System:", 10, 13, "  1. Name: NenOS", 10, 13, "  2. Version: Alpha 1.1", 10, 13, "  3. Made by: Nenboard", 10, 13, 0
 disk_drive: db "Hardware:", 10, 13, "  1. Are the disk drives installed: ", 0
 coprocessor: db "  2. Are the coprocessor installed: ", 0
 hardware_yes: db "YES", 0
